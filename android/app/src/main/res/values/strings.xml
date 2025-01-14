@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EcoTrack</string>
+    <string name="default_web_client_id">982791033360-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId">982791033360</string>
+    <string name="google_api_key">AIzaSyDeyOrEfw5V4he4AGvEE9RAwn655V-AjGc</string>
+    <string name="google_app_id">1:982791033360:android:xxxxxxxxxxxxxxxx</string>
+    <string name="google_crash_reporting_api_key">AIzaSyDeyOrEfw5V4he4AGvEE9RAwn655V-AjGc</string>
+    <string name="google_storage_bucket">ecotrack-cb6af.appspot.com</string>
+    <string name="project_id">ecotrack-cb6af</string>
+</resources> 

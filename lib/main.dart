@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF2C3E50)),
           useMaterial3: true),
-      home: LoginSignupPage(),
+      home: Login(),
     );
   }
 }

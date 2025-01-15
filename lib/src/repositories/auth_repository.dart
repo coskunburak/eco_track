@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_track/src/repositories/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/userDetail.dart';
+
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final CollectionReference collectionUsers =
@@ -46,14 +48,28 @@ class AuthRepository {
 
   Future<bool> signIn({required String email, required String password}) async {
     try {
-      UserCredential userCredential =
-      await _firebaseAuth.signInWithEmailAndPassword(
+      // Firebase ile kullanıcı girişi
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       String? uid = userCredential.user?.uid;
+
       if (uid != null) {
+        DocumentSnapshot snapshot = await collectionUsers.doc(uid).get();
+
+        print("Firestore'dan gelen veri: ${snapshot.data()}");
+
+        final userData = snapshot.data() as Map<String, dynamic>?;
+
+        if (userData != null) {
+          UserDetail userDetail = UserDetail.fromMap(userData);
+          print("Kullanıcı Bilgileri: ${userDetail.email}");
+        } else {
+          throw Exception("Kullanıcı verileri bulunamadı.");
+        }
+
         await collectionUsers.doc(uid).update({
           'loginTimes': FieldValue.arrayUnion([Timestamp.now()]),
         });
@@ -65,17 +81,17 @@ class AuthRepository {
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        throw Exception('No user found for that email.');
+        throw Exception('Bu e-postayla kayıtlı kullanıcı bulunamadı.');
       } else if (e.code == 'wrong-password') {
-        throw Exception('Wrong password provided for that user.');
+        throw Exception('Girilen şifre hatalı.');
       } else {
         throw Exception('Authentication error: ${e.message}');
       }
     } catch (e) {
-      // Genel hataları yakala
-      throw Exception('An error occurred: $e');
+      throw Exception('Bir hata oluştu: $e');
     }
   }
+
 
   Future<void> resetPassword({required String email}) async {
     try {

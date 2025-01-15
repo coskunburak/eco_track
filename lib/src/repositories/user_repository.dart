@@ -4,17 +4,20 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final CollectionReference collectionUsers =
-      FirebaseFirestore.instance.collection("Users");
+  final CollectionReference<Map<String, dynamic>> collectionUsers =
+  FirebaseFirestore.instance.collection("Users");
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<DocumentSnapshot> getUserInfo(String uid) async {
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserInfo(String uid) async {
     try {
-      return await collectionUsers.doc(uid).get();
+      final snapshot = await collectionUsers.doc(uid).get();
+      return snapshot as DocumentSnapshot<Map<String, dynamic>>;
     } catch (e) {
       throw Exception('Error fetching user info: $e');
     }
   }
+
+
 
   Future<void> updateUserInfo(String uid, Map<String, dynamic> data) async {
     try {
@@ -26,20 +29,20 @@ class UserRepository {
 
   Future<void> deleteUser(String uid) async {
     try {
-      DocumentSnapshot userDoc = await collectionUsers.doc(uid).get();
-      var userData = userDoc.data() as Map<String, dynamic>?;
+      DocumentSnapshot<Map<String, dynamic>> userDoc =
+      await collectionUsers.doc(uid).get();
 
-      if (userData != null && userDoc.exists) {
+      if (userDoc.exists) {
         await collectionUsers.doc(uid).delete();
 
-        final user = FirebaseAuth.instance.currentUser;
+        final user = _firebaseAuth.currentUser;
         if (user != null && user.uid == uid) {
           await user.delete();
         } else {
-          throw Exception('Kullanıcı oturum açmamış.');
+          throw Exception('No user is logged in.');
         }
       } else {
-        throw Exception('Kullanıcı bulunamadı.');
+        throw Exception('User not found.');
       }
     } catch (e) {
       throw Exception('Error deleting user: $e');
@@ -47,19 +50,18 @@ class UserRepository {
   }
 
   Future<void> updateEmail(String newEmail) async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _firebaseAuth.currentUser;
 
     try {
       if (user != null) {
         await user.updateEmail(newEmail);
         await user.sendEmailVerification();
-        await FirebaseAuth.instance.signOut();
+        await _firebaseAuth.signOut();
       } else {
-        throw Exception('Şu anda oturum açmış bir kullanıcı bulunmuyor.');
+        throw Exception('No user is logged in.');
       }
     } catch (e) {
-      throw Exception(
-          'E-posta adresiniz güncellenmiştir. Lütfen yeni e-posta adresinize gelen doğrulama bağlantısını kontrol edin ve yeniden giriş yapın.');
+      throw Exception('Error updating email: $e');
     }
   }
 
@@ -74,14 +76,13 @@ class UserRepository {
       await user.reauthenticateWithCredential(credential);
       await user.updatePassword(newPassword);
     } catch (e) {
-      throw Exception('Şifre güncellenirken bir hata oluştu: $e');
+      throw Exception('Error updating password: $e');
     }
   }
 
   Future<String?> getMessageToken() async {
     try {
-      String? token = await _firebaseMessaging.getToken();
-      return token;
+      return await _firebaseMessaging.getToken();
     } catch (e) {
       throw Exception('Error fetching message token: $e');
     }

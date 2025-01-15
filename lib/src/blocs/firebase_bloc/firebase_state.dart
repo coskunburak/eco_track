@@ -11,7 +11,7 @@ class FirebaseInitial extends FirebaseState {
 }
 
 class UserInfoLoaded extends FirebaseState {
-  final DocumentSnapshot userInfo;
+  final DocumentSnapshot<Map<String, dynamic>> userInfo;
 
   const UserInfoLoaded({required this.userInfo});
 

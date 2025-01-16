@@ -11,7 +11,11 @@ class SignUpRequested extends AuthEvent {
   final String name;
   final String surname;
 
-  SignUpRequested({required this.email, required this.password,required this.name,required this.surname});
+  SignUpRequested(
+      {required this.email,
+      required this.password,
+      required this.name,
+      required this.surname});
 
   @override
   List<Object> get props => [email, password];
@@ -35,3 +39,8 @@ class ResetPasswordRequested extends AuthEvent {
   List<Object> get props => [email];
 }
 
+class FetchUserPermissions extends AuthEvent {
+  final String uid;
+
+  FetchUserPermissions(this.uid);
+}

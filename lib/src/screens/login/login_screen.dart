@@ -1,4 +1,3 @@
-
 import 'package:eco_track/src/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/login_bloc/auth_bloc.dart';
 import '../../blocs/login_bloc/auth_state.dart';
 import '../../repositories/auth_repository.dart';
+import '../../utils/global.dart';
 import '../../widgets/login_tab.dart';
 import '../../widgets/reset_password.dart';
 import '../../widgets/signup_tab.dart';
@@ -26,15 +26,13 @@ class Login extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               centerTitle: true,
+              backgroundColor: appBarBackgroundColor,
               elevation: 0,
               title: const Text(
-                "Giriş",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Color(0xFF0c3143)),
+                "Zero Point",
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               bottom: const TabBar(
-                labelColor: Colors.black,
-                unselectedLabelColor: Color(0xFF2C3E50),
                 tabs: [
                   Tab(text: 'Giriş Yap'),
                   Tab(text: 'Kayıt Ol'),
@@ -71,33 +69,18 @@ class Login extends StatelessWidget {
                   if (state is ResetPasswordSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text(
-                              'Şifre sıfırlama e-postası gönderildi')),
+                          content:
+                              Text('Şifre sıfırlama e-postası gönderildi')),
                     );
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TabBarView(
                     children: [
-
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SingleChildScrollView(
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height,
-                              child: TabBarView(
-                                children: [
-                                  buildLoginTab(context),
-                                  buildSignUpTab(context),
-                                  buildResetPasswordTab(context),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      buildLoginTab(context),
+                      buildSignUpTab(context),
+                      buildResetPasswordTab(context),
                     ],
                   ),
                 ),

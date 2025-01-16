@@ -1,4 +1,6 @@
+import 'package:eco_track/src/elements/appBar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -6,9 +8,194 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Center(
-        child: Text('Welcome to EcoTrack'),
+      appBar: CustomAppBar(title: 'Zero Point'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Karbon Ayak İzi Görüntüleme Kartı
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5,
+                color: const Color(0xFF2ECC71),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Güncel Karbon Ayak İzi",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            "2.35 Ton CO₂",
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(
+                            FontAwesomeIcons.cloud,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Hedef Sayfalara Ulaşım için Grid
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: [
+                  _buildFeatureCard(
+                    context,
+                    icon: FontAwesomeIcons.user,
+                    title: "Profil",
+                    onTap: () {
+                      // Profil Sayfasına Git
+                    },
+                  ),
+                  _buildFeatureCard(
+                    context,
+                    icon: FontAwesomeIcons.sun,
+                    title: "Hava Durumu",
+                    onTap: () {
+                      // Hava Durumu Sayfasına Git
+                    },
+                  ),
+                  _buildFeatureCard(
+                    context,
+                    icon: FontAwesomeIcons.calculator,
+                    title: "Karbon Ayak İzi Hesapla",
+                    onTap: () {
+                      // Karbon Ayak İzi Hesaplama Sayfasına Git
+                    },
+                  ),
+                  _buildFeatureCard(
+                    context,
+                    icon: FontAwesomeIcons.chartBar,
+                    title: "Raporlar",
+                    onTap: () {
+                      // Raporlar Sayfasına Git
+                    },
+                  ),
+                  _buildFeatureCard(
+                    context,
+                    icon: FontAwesomeIcons.infoCircle,
+                    title: "Hakkında",
+                    onTap: () {
+                      // Hakkında Sayfasına Git
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Günlük Öneri Bölümü
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Günün Önerisi",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF27AE60),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Bugün toplu taşıma kullanarak karbon ayak izinizi %10 oranında azaltabilirsiniz!",
+                        style: TextStyle(fontSize: 16, color: Colors.black87),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color(0xFF27AE60),
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Ana Sayfa',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Raporlar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Ayarlar',
+          ),
+        ],
+        onTap: (index) {
+          // Alt menü navigasyonu
+        },
+      ),
+    );
+  }
+
+  Widget _buildFeatureCard(BuildContext context,
+      {required IconData icon, required String title, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 40, color: const Color(0xFF27AE60)),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -43,3 +43,8 @@ class ResetPasswordSuccess extends AuthState {
   List<Object> get props => [];
 }
 
+class UserPermissionsLoaded extends AuthState {
+  final Map<String, dynamic> permissions;
+
+  UserPermissionsLoaded(this.permissions);
+}

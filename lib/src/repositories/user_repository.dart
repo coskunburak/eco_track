@@ -4,20 +4,17 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final CollectionReference<Map<String, dynamic>> collectionUsers =
+  final CollectionReference collectionUsers =
   FirebaseFirestore.instance.collection("Users");
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserInfo(String uid) async {
+  Future<DocumentSnapshot> getUserInfo(String uid) async {
     try {
-      final snapshot = await collectionUsers.doc(uid).get();
-      return snapshot as DocumentSnapshot<Map<String, dynamic>>;
+      return await collectionUsers.doc(uid).get();
     } catch (e) {
       throw Exception('Error fetching user info: $e');
     }
   }
-
-
 
   Future<void> updateUserInfo(String uid, Map<String, dynamic> data) async {
     try {
@@ -29,20 +26,29 @@ class UserRepository {
 
   Future<void> deleteUser(String uid) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-      await collectionUsers.doc(uid).get();
+      DocumentSnapshot userDoc = await collectionUsers.doc(uid).get();
+      var userData = userDoc.data() as Map<String, dynamic>?;
 
-      if (userDoc.exists) {
+      if (userData != null && userDoc.exists) {
+        var permissionId = userData['permissionId'];
+
+        String permissionIdStr = permissionId.toString();
+
         await collectionUsers.doc(uid).delete();
 
-        final user = _firebaseAuth.currentUser;
+        final user = FirebaseAuth.instance.currentUser;
         if (user != null && user.uid == uid) {
+          await FirebaseFirestore.instance
+              .collection('permissions')
+              .doc(permissionIdStr)
+              .delete();
+
           await user.delete();
         } else {
-          throw Exception('No user is logged in.');
+          throw Exception('Kullanıcı oturum açmamış.');
         }
       } else {
-        throw Exception('User not found.');
+        throw Exception('Kullanıcı bulunamadı.');
       }
     } catch (e) {
       throw Exception('Error deleting user: $e');
@@ -50,21 +56,21 @@ class UserRepository {
   }
 
   Future<void> updateEmail(String newEmail) async {
-    final user = _firebaseAuth.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
 
     try {
       if (user != null) {
         await user.updateEmail(newEmail);
         await user.sendEmailVerification();
-        await _firebaseAuth.signOut();
+        await FirebaseAuth.instance.signOut();
       } else {
-        throw Exception('No user is logged in.');
+        throw Exception('Şu anda oturum açmış bir kullanıcı bulunmuyor.');
       }
     } catch (e) {
-      throw Exception('Error updating email: $e');
+      throw Exception(
+          'E-posta adresiniz güncellenmiştir. Lütfen yeni e-posta adresinize gelen doğrulama bağlantısını kontrol edin ve yeniden giriş yapın.');
     }
   }
-
   Future<void> updatePassword(String oldPassword, String newPassword) async {
     final user = _firebaseAuth.currentUser;
     final credential = EmailAuthProvider.credential(
@@ -76,13 +82,14 @@ class UserRepository {
       await user.reauthenticateWithCredential(credential);
       await user.updatePassword(newPassword);
     } catch (e) {
-      throw Exception('Error updating password: $e');
+      throw Exception('Şifre güncellenirken bir hata oluştu: $e');
     }
   }
 
   Future<String?> getMessageToken() async {
     try {
-      return await _firebaseMessaging.getToken();
+      String? token = await _firebaseMessaging.getToken();
+      return token;
     } catch (e) {
       throw Exception('Error fetching message token: $e');
     }

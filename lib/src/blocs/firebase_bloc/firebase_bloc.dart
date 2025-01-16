@@ -7,29 +7,24 @@ import 'firebase_state.dart';
 class FirebaseBloc extends Bloc<FirebaseEvent, FirebaseState> {
   final UserRepository userRepository;
 
-  FirebaseBloc({required this.userRepository}) : super(FirebaseInitial()) {
+  FirebaseBloc(FirebaseInitial firebaseInitial, {required this.userRepository})
+      : super(FirebaseInitial()) {
     on<FetchUserInfoRequested>((event, emit) async {
       try {
         emit(FirebaseLoading());
-        DocumentSnapshot<Map<String, dynamic>> userInfo =
-        await userRepository.getUserInfo(event.uid);
-        if (!userInfo.exists) {
-          throw Exception("Kullanıcı verileri bulunamadı.");
-        }
+        DocumentSnapshot userInfo = await userRepository.getUserInfo(event.uid);
         emit(UserInfoLoaded(userInfo: userInfo));
       } catch (e) {
         emit(FirebaseError(error: e.toString()));
       }
     });
 
-
     on<UpdateUserInfoRequested>((event, emit) async {
       try {
         emit(FirebaseLoading());
         await userRepository.updateUserInfo(event.uid, event.data);
-        if (event.data.containsKey('email')) {
-          await userRepository.updateEmail(event.data['email']);
-        }
+        await userRepository.updateEmail(event.data['email']);
+        DocumentSnapshot userInfo = await userRepository.getUserInfo(event.uid);
         emit(UserInfoUpdated());
       } catch (e) {
         emit(FirebaseError(error: e.toString()));

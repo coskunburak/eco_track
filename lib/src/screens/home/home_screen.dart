@@ -1,6 +1,9 @@
 import 'package:eco_track/src/elements/appBar.dart';
+import 'package:eco_track/src/screens/energy/energy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../widgets/FeatureCard.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -59,8 +62,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Hedef Sayfalara Ulaşım için Grid
               GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -68,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 children: [
-                  _buildFeatureCard(
+                  buildFeatureCard(
                     context,
                     icon: FontAwesomeIcons.user,
                     title: "Profil",
@@ -76,7 +77,7 @@ class HomeScreen extends StatelessWidget {
                       // Profil Sayfasına Git
                     },
                   ),
-                  _buildFeatureCard(
+                  buildFeatureCard(
                     context,
                     icon: FontAwesomeIcons.sun,
                     title: "Hava Durumu",
@@ -84,15 +85,19 @@ class HomeScreen extends StatelessWidget {
                       // Hava Durumu Sayfasına Git
                     },
                   ),
-                  _buildFeatureCard(
+                  buildFeatureCard(
                     context,
                     icon: FontAwesomeIcons.calculator,
                     title: "Karbon Ayak İzi Hesapla",
                     onTap: () {
-                      // Karbon Ayak İzi Hesaplama Sayfasına Git
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EnergyScreen()),
+                      );
                     },
                   ),
-                  _buildFeatureCard(
+                  buildFeatureCard(
                     context,
                     icon: FontAwesomeIcons.chartBar,
                     title: "Raporlar",
@@ -100,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                       // Raporlar Sayfasına Git
                     },
                   ),
-                  _buildFeatureCard(
+                  buildFeatureCard(
                     context,
                     icon: FontAwesomeIcons.infoCircle,
                     title: "Hakkında",
@@ -111,8 +116,6 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Günlük Öneri Bölümü
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -165,37 +168,6 @@ class HomeScreen extends StatelessWidget {
         onTap: (index) {
           // Alt menü navigasyonu
         },
-      ),
-    );
-  }
-
-  Widget _buildFeatureCard(BuildContext context,
-      {required IconData icon, required String title, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40, color: const Color(0xFF27AE60)),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

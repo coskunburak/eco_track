@@ -1,66 +1,53 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// auth_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthRepository authRepository;
-  var collectionUsers = FirebaseFirestore.instance.collection("Users");
+  final AuthRepository _authRepository;
 
-  AuthBloc({required this.authRepository}) : super(UnAuthenticated(error: '')) {
+  AuthBloc({required AuthRepository authRepository})
+      : _authRepository = authRepository,
+        super(AuthInitial()) {
     on<SignUpRequested>((event, emit) async {
-      emit(Loading());
+      emit(AuthLoading());
       try {
-        await authRepository.signUp(
-            email: event.email,
-            password: event.password,
-            name: event.name,
-            surname: event.surname);
-        emit(Authenticated());
+        await _authRepository.signUp(
+          name: event.name,
+          surname: event.surname,
+          email: event.email,
+          password: event.password,
+        );
+        emit(SignUpSuccess());
       } catch (e) {
-        emit(UnAuthenticated(error: e.toString()));
+        emit(AuthError(error: e.toString()));
       }
     });
 
     on<LoginRequested>((event, emit) async {
-      emit(Loading());
+      emit(AuthLoading());
       try {
-        bool isAuthenticated = (await authRepository.signIn(
+        User? user = await _authRepository.login(
           email: event.email,
           password: event.password,
-        )) as bool;
-        if (isAuthenticated) {
-          emit(Authenticated());
-        } else {
-          emit(UnAuthenticated(error: 'Giriş başarısız'));
+        );
+        if (user != null) {
+          emit(Authenticated(user: user));
         }
       } catch (e) {
-        emit(UnAuthenticated(error: e.toString()));
+        emit(AuthError(error: e.toString()));
       }
     });
 
     on<ResetPasswordRequested>((event, emit) async {
-      emit(Loading());
+      emit(AuthLoading());
       try {
-        await authRepository.resetPassword(email: event.email);
+        await _authRepository.resetPassword(email: event.email);
         emit(ResetPasswordSuccess());
       } catch (e) {
-        emit(ResetPasswordFailure(error: e.toString()));
-      }
-    });
-
-    on<FetchUserPermissions>((event, emit) async {
-      try {
-        final permissions = await authRepository.getUserPermissions(event.uid);
-        if (permissions != null) {
-          emit(UserPermissionsLoaded(permissions));
-        } else {
-          emit(UnAuthenticated(error: 'Permissions not found'));
-        }
-      } catch (e) {
-        emit(UnAuthenticated(error: e.toString()));
+        emit(AuthError(error: e.toString()));
       }
     });
   }

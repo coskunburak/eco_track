@@ -1,50 +1,22 @@
-import 'package:equatable/equatable.dart';
+// auth_state.dart
+import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class AuthState extends Equatable {
-  @override
-  List<Object> get props => [];
-}
+abstract class AuthState {}
 
-class Loading extends AuthState {
-  @override
-  List<Object> get props => [];
-}
+class AuthInitial extends AuthState {}
+
+class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {
-  @override
-  List<Object> get props => [];
+  final User user;
+  Authenticated({required this.user});
 }
 
-class UnAuthenticated extends AuthState {
+class AuthError extends AuthState {
   final String error;
-
-  UnAuthenticated({required this.error});
-
-  @override
-  List<Object> get props => [error];
+  AuthError({required this.error});
 }
 
-class SignUpSuccess extends AuthState {
-  @override
-  List<Object> get props => [];
-}
+class SignUpSuccess extends AuthState {}
 
-class ResetPasswordFailure extends AuthState {
-  final String error;
-
-  ResetPasswordFailure({required this.error});
-
-  @override
-  List<Object> get props => [error];
-}
-
-class ResetPasswordSuccess extends AuthState {
-  @override
-  List<Object> get props => [];
-}
-
-class UserPermissionsLoaded extends AuthState {
-  final Map<String, dynamic> permissions;
-
-  UserPermissionsLoaded(this.permissions);
-}
+class ResetPasswordSuccess extends AuthState {}

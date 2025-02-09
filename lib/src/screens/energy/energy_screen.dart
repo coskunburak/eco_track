@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../blocs/energy_bloc/energy_bloc.dart';
 import '../../blocs/energy_bloc/energy_event.dart';
 import '../../blocs/energy_bloc/energy_state.dart';
+import '../../widgets/Textfield.dart';
 
 class EnergyScreen extends StatelessWidget {
   const EnergyScreen({Key? key}) : super(key: key);
@@ -41,13 +42,13 @@ class _EnergyScreenBodyState extends State<EnergyScreenBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTextField("Elektrik Tüketimi (kWh)", electricityController),
+              buildTextField("Elektrik Tüketimi (kWh)", electricityController),
               const SizedBox(height: 10),
-              _buildTextField("Doğalgaz Tüketimi (m³)", gasController),
+              buildTextField("Doğalgaz Tüketimi (m³)", gasController),
               const SizedBox(height: 10),
-              _buildTextField("Su Kullanımı (m³)", waterController),
+              buildTextField("Su Kullanımı (m³)", waterController),
               const SizedBox(height: 10),
-              _buildTextField("Ulaşım Mesafesi (km)", travelController),
+              buildTextField("Ulaşım Mesafesi (km)", travelController),
               const SizedBox(height: 20),
               BlocConsumer<EnergyBloc, EnergyState>(
                 listener: (context, state) {
@@ -90,17 +91,6 @@ class _EnergyScreenBodyState extends State<EnergyScreenBody> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
       ),
     );
   }

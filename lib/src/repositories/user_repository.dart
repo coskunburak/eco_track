@@ -1,106 +1,28 @@
+// user_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UserRepository {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final CollectionReference collectionUsers =
-  FirebaseFirestore.instance.collection("Users");
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseFirestore _firestore;
 
-  Future<DocumentSnapshot> getUserInfo(String uid) async {
-    try {
-      return await collectionUsers.doc(uid).get();
-    } catch (e) {
-      throw Exception('Error fetching user info: $e');
-    }
+  UserRepository({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  Future<void> createUser(String uid, Map<String, dynamic> data) async {
+    await _firestore.collection("users").doc(uid).set(data);
   }
 
-  Future<void> updateUserInfo(String uid, Map<String, dynamic> data) async {
-    try {
-      await collectionUsers.doc(uid).update(data);
-    } catch (e) {
-      throw Exception('Error updating user info: $e');
-    }
+  Future<void> incrementLoginTimes(String uid) async {
+    await _firestore.collection("users").doc(uid).update({
+      "logintimes": FieldValue.increment(1),
+    });
   }
 
-  Future<void> deleteUser(String uid) async {
-    try {
-      DocumentSnapshot userDoc = await collectionUsers.doc(uid).get();
-      var userData = userDoc.data() as Map<String, dynamic>?;
-
-      if (userData != null && userDoc.exists) {
-        var permissionId = userData['permissionId'];
-
-        String permissionIdStr = permissionId.toString();
-
-        await collectionUsers.doc(uid).delete();
-
-        final user = FirebaseAuth.instance.currentUser;
-        if (user != null && user.uid == uid) {
-          await FirebaseFirestore.instance
-              .collection('permissions')
-              .doc(permissionIdStr)
-              .delete();
-
-          await user.delete();
-        } else {
-          throw Exception('Kullanıcı oturum açmamış.');
-        }
-      } else {
-        throw Exception('Kullanıcı bulunamadı.');
-      }
-    } catch (e) {
-      throw Exception('Error deleting user: $e');
-    }
-  }
-
-  Future<void> updateEmail(String newEmail) async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    try {
-      if (user != null) {
-        await user.updateEmail(newEmail);
-        await user.sendEmailVerification();
-        await FirebaseAuth.instance.signOut();
-      } else {
-        throw Exception('Şu anda oturum açmış bir kullanıcı bulunmuyor.');
-      }
-    } catch (e) {
-      throw Exception(
-          'E-posta adresiniz güncellenmiştir. Lütfen yeni e-posta adresinize gelen doğrulama bağlantısını kontrol edin ve yeniden giriş yapın.');
-    }
-  }
-  Future<void> updatePassword(String oldPassword, String newPassword) async {
-    final user = _firebaseAuth.currentUser;
-    final credential = EmailAuthProvider.credential(
-      email: user!.email!,
-      password: oldPassword,
-    );
-
-    try {
-      await user.reauthenticateWithCredential(credential);
-      await user.updatePassword(newPassword);
-    } catch (e) {
-      throw Exception('Şifre güncellenirken bir hata oluştu: $e');
-    }
-  }
-
-  Future<String?> getMessageToken() async {
-    try {
-      String? token = await _firebaseMessaging.getToken();
-      return token;
-    } catch (e) {
-      throw Exception('Error fetching message token: $e');
-    }
-  }
-
-  Future<void> saveMessageToken(String uid, String? token) async {
-    if (token == null) return;
-    try {
-      await collectionUsers.doc(uid).update({'messageToken': token});
-    } catch (e) {
-      throw Exception('Error saving message token: $e');
+  Future<Map<String, dynamic>> getUser(String uid) async {
+    DocumentSnapshot doc = await _firestore.collection("users").doc(uid).get();
+    if (doc.exists) {
+      return doc.data() as Map<String, dynamic>;
+    } else {
+      throw Exception("User not found");
     }
   }
 }

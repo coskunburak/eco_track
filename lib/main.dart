@@ -1,5 +1,6 @@
 import 'package:eco_track/src/screens/home/home_screen.dart';
 import 'package:eco_track/src/screens/login/login_screen.dart';
+import 'package:eco_track/src/screens/profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF2C3E50)),
           useMaterial3: true),
-      home: HomeScreen(
+      home: LoginScreen(
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:eco_track/src/elements/appBar.dart';
 import 'package:eco_track/src/screens/energy/energy_screen.dart';
+import 'package:eco_track/src/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -18,7 +19,6 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Karbon Ayak İzi Görüntüleme Kartı
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -74,7 +74,10 @@ class HomeScreen extends StatelessWidget {
                     icon: FontAwesomeIcons.user,
                     title: "Profil",
                     onTap: () {
-                      // Profil Sayfasına Git
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                      );
                     },
                   ),
                   buildFeatureCard(

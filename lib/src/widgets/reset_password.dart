@@ -4,7 +4,6 @@ import '../blocs/login_bloc/auth_bloc.dart';
 import '../blocs/login_bloc/auth_event.dart';
 import '../blocs/login_bloc/auth_state.dart';
 
-// buildResetPasswordTab.dart
 Widget buildResetPasswordTab(BuildContext context) {
   final TextEditingController emailController = TextEditingController();
 

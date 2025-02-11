@@ -1,5 +1,7 @@
+import 'package:eco_track/src/screens/login/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../blocs/login_bloc/auth_bloc.dart';
 import '../blocs/login_bloc/auth_event.dart';
 import '../blocs/login_bloc/auth_state.dart';
@@ -8,6 +10,7 @@ enum FieldFocus { email, password }
 
 class LoginTab extends StatefulWidget {
   const LoginTab({Key? key}) : super(key: key);
+
   @override
   State<LoginTab> createState() => _LoginTabState();
 }
@@ -42,9 +45,9 @@ class _LoginTabState extends State<LoginTab> {
             ),
             // "Login" başlığı
             Container(
-              margin: const EdgeInsets.only(right: 170.0),
+              margin: const EdgeInsets.only(bottom: 2),
               child: const Text(
-                "Hoşgeldiniz",
+                "Zero Point",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -56,7 +59,7 @@ class _LoginTabState extends State<LoginTab> {
             const SizedBox(height: 10),
             // Alt başlık
             Container(
-              margin: const EdgeInsets.only(right: 150.0),
+              margin: const EdgeInsets.only(bottom: 2),
               child: const Text(
                 "Devam etmek için lütfen oturum açın",
                 style: TextStyle(
@@ -72,7 +75,9 @@ class _LoginTabState extends State<LoginTab> {
               height: height * 0.071,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
-                color: selectedField == FieldFocus.email ? enabledColor : backgroundColor,
+                color: selectedField == FieldFocus.email
+                    ? enabledColor
+                    : backgroundColor,
               ),
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -86,15 +91,21 @@ class _LoginTabState extends State<LoginTab> {
                   border: InputBorder.none,
                   prefixIcon: Icon(
                     Icons.email_outlined,
-                    color: selectedField == FieldFocus.email ? enabledText : disabledColor,
+                    color: selectedField == FieldFocus.email
+                        ? enabledText
+                        : disabledColor,
                   ),
                   hintText: 'Email',
                   hintStyle: TextStyle(
-                    color: selectedField == FieldFocus.email ? enabledText : disabledColor,
+                    color: selectedField == FieldFocus.email
+                        ? enabledText
+                        : disabledColor,
                   ),
                 ),
                 style: TextStyle(
-                  color: selectedField == FieldFocus.email ? enabledText : disabledColor,
+                  color: selectedField == FieldFocus.email
+                      ? enabledText
+                      : disabledColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -106,7 +117,9 @@ class _LoginTabState extends State<LoginTab> {
               height: height * 0.071,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
-                color: selectedField == FieldFocus.password ? enabledColor : backgroundColor,
+                color: selectedField == FieldFocus.password
+                    ? enabledColor
+                    : backgroundColor,
               ),
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -121,18 +134,24 @@ class _LoginTabState extends State<LoginTab> {
                   border: InputBorder.none,
                   prefixIcon: Icon(
                     Icons.lock_open_outlined,
-                    color: selectedField == FieldFocus.password ? enabledText : disabledColor,
+                    color: selectedField == FieldFocus.password
+                        ? enabledText
+                        : disabledColor,
                   ),
                   suffixIcon: IconButton(
                     icon: isPasswordVisible
                         ? Icon(
-                      Icons.visibility_off,
-                      color: selectedField == FieldFocus.password ? enabledText : disabledColor,
-                    )
+                            Icons.visibility_off,
+                            color: selectedField == FieldFocus.password
+                                ? enabledText
+                                : disabledColor,
+                          )
                         : Icon(
-                      Icons.visibility,
-                      color: selectedField == FieldFocus.password ? enabledText : disabledColor,
-                    ),
+                            Icons.visibility,
+                            color: selectedField == FieldFocus.password
+                                ? enabledText
+                                : disabledColor,
+                          ),
                     onPressed: () {
                       setState(() {
                         isPasswordVisible = !isPasswordVisible;
@@ -141,11 +160,15 @@ class _LoginTabState extends State<LoginTab> {
                   ),
                   hintText: 'Parola',
                   hintStyle: TextStyle(
-                    color: selectedField == FieldFocus.password ? enabledText : disabledColor,
+                    color: selectedField == FieldFocus.password
+                        ? enabledText
+                        : disabledColor,
                   ),
                 ),
                 style: TextStyle(
-                  color: selectedField == FieldFocus.password ? enabledText : disabledColor,
+                  color: selectedField == FieldFocus.password
+                      ? enabledText
+                      : disabledColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -162,12 +185,13 @@ class _LoginTabState extends State<LoginTab> {
                     final email = emailController.text.trim();
                     final password = passwordController.text.trim();
                     context.read<AuthBloc>().add(
-                      LoginRequested(email: email, password: password),
-                    );
+                          LoginRequested(email: email, password: password),
+                        );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0DF5E4),
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 80),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 80),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
@@ -207,14 +231,19 @@ class _LoginTabState extends State<LoginTab> {
                 ),
                 TextButton(
                   onPressed: () {
-                    DefaultTabController.of(context)?.animateTo(1);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignupScreen()),
+                    );
                   },
                   child: const Text(
-                    "Sign up",
+                    "Kayıt ol",
                     style: TextStyle(
                       color: Color(0xFF0DF5E4),
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
+
                     ),
                   ),
                 ),

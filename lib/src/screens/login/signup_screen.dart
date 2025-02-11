@@ -7,10 +7,11 @@ import '../../blocs/login_bloc/auth_state.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/user_repository.dart';
 import '../../utils/global.dart';
-import '../../widgets/login_tab.dart' as loginTab;
+// Diğer sekmeler için alias kullanarak:
+import '../../widgets/signup_tab.dart' as signupTab;
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +42,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              title: const Text(
+              *//*title: const Text(
                 "Zero Point",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
-              ),
+              ),*//*
             ),*/
             body: GestureDetector(
               onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -76,7 +77,7 @@ class LoginScreen extends StatelessWidget {
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: loginTab.buildLoginTab(context),
+                  child: signupTab.buildSignupTab(context),
                 ),
               ),
             ),

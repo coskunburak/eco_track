@@ -151,7 +151,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return const LoginScreen();
     }
     return BlocProvider(
-      // Burada UserBloc yapıcısına yalnızca adlandırılmış userRepository parametresini veriyoruz.
       create: (context) => UserBloc(
         userRepository: UserRepository(),
       )..add(LoadUser(uid: user!.uid)),
@@ -164,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             elevation: 0,
             title: const Text(
               "Kullanıcı Bilgileri",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
             ),
             centerTitle: true,
             backgroundColor: appBarBackgroundColor,

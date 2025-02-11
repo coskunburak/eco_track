@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 elevation: 5,
-                color: const Color(0xFF2ECC71),
+                color: const Color(0xFF1F1A30),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(

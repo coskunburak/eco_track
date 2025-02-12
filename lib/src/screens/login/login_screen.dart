@@ -63,16 +63,6 @@ class LoginScreen extends StatelessWidget {
                       SnackBar(content: Text(state.error)),
                     );
                   }
-                  if (state is SignUpSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Kayıt Başarılı')),
-                    );
-                  }
-                  if (state is ResetPasswordSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Şifre sıfırlama e-postası gönderildi')),
-                    );
-                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

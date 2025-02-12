@@ -243,7 +243,6 @@ class _LoginTabState extends State<LoginTab> {
                       color: Color(0xFF0DF5E4),
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
-
                     ),
                   ),
                 ),

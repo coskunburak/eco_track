@@ -1,5 +1,7 @@
 import 'package:eco_track/src/blocs/login_bloc/auth_event.dart';
 import 'package:eco_track/src/blocs/login_bloc/auth_state.dart';
+import 'package:eco_track/src/screens/home/home_screen.dart';
+import 'package:eco_track/src/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -261,6 +263,7 @@ class _SignupTabState extends State<SignupTab> {
                               email: email,
                               password: password),
                         );
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0DF5E4),
@@ -281,6 +284,36 @@ class _SignupTabState extends State<SignupTab> {
                   ),
                 );
               },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Zaten bir hesabınız var mı?",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  child: const Text(
+                    "Giriş yap",
+                    style: TextStyle(
+                      color: Color(0xFF0DF5E4),
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
